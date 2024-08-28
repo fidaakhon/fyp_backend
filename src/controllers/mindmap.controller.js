@@ -20,13 +20,13 @@ const createMindmap = asyncHandler(async (req, res) => {
         
     }
 
-    // const existedMindmap = await Mindmap.findOne({
-    //     title
-    // })
+    const existedMindmap = await Mindmap.findOne({
+        id
+    })
 
-    // if (existedMindmap) {
-    //     throw new ApiError(409, "Mindmap with title already exists")
-    // }
+    if (existedMindmap) {
+        throw new ApiError(409, "Mindmap with title already exists")
+    }
 
     const mindmap = await Mindmap.create({
         id,
@@ -55,8 +55,25 @@ const getAllMindmaps = asyncHandler(async (req, res) => {
     )
 })
 
+const deleteMindmap = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    const mindmap = await Mindmap.findOneAndDelete({
+        id
+    })
+
+    if (!mindmap) {
+        throw new ApiError(404, "Mindmap not found")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "Mindmap deleted successfully", mindmap)
+    )
+})
+
 
 export {
     createMindmap,
-    getAllMindmaps
+    getAllMindmaps,
+    deleteMindmap
 }
