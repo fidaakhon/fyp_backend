@@ -17,7 +17,7 @@ const createMindmap = asyncHandler(async (req, res) => {
         !title
     ) {
         throw new ApiError(400, "All fields are required")
-        
+
     }
 
     const existedMindmap = await Mindmap.findOne({
@@ -71,9 +71,32 @@ const deleteMindmap = asyncHandler(async (req, res) => {
     )
 })
 
+const updateMindmap = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    const { title, nodes } = req.body
+
+    const mindmap = await Mindmap.findOneAndUpdate({
+        id
+    }, {
+        title,
+        nodes
+    }, {
+        new: true
+    })
+
+    if (!mindmap) {
+        throw new ApiError(404, "Mindmap not found")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "Mindmap updated successfully", mindmap)
+    )
+})
+
 
 export {
     createMindmap,
     getAllMindmaps,
-    deleteMindmap
+    deleteMindmap,
+    updateMindmap
 }
