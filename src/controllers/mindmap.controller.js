@@ -10,7 +10,7 @@ const createMindmap = asyncHandler(async (req, res) => {
     // create mindmap object - create entry in db
 
     const { id, title, nodes } = req.body
-    console.log('Received request:', req.body);
+    
 
     if (
         !id ||
@@ -21,7 +21,8 @@ const createMindmap = asyncHandler(async (req, res) => {
     }
 
     const existedMindmap = await Mindmap.findOne({
-        id
+        id,
+        title
     })
 
     if (existedMindmap) {
