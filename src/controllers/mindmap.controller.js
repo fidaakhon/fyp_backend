@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import { Mindmap } from "../models/mindmap.model.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { User } from "../models/user.model.js"
 
 const createMindmap = asyncHandler(async (req, res) => {
     // get mindmap details from frontend
@@ -9,8 +10,8 @@ const createMindmap = asyncHandler(async (req, res) => {
     // check if mindmap already exists: title
     // create mindmap object - create entry in db
 
-    const { id, title, nodes } = req.body
-    
+    const { id, title, nodes, email } = req.body
+
 
     if (
         !id ||
@@ -29,10 +30,19 @@ const createMindmap = asyncHandler(async (req, res) => {
         throw new ApiError(409, "Mindmap with title already exists")
     }
 
+    const user = await User.findOne({
+        email
+    })
+
+    if (!user) {
+        throw new ApiError(404, "User not found")
+    }
+
     const mindmap = await Mindmap.create({
         id,
         title,
-        nodes
+        nodes,
+        owner: user._id,
     })
 
     if (!mindmap) {
