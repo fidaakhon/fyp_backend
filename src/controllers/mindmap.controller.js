@@ -55,7 +55,11 @@ const createMindmap = asyncHandler(async (req, res) => {
 })
 
 const getAllMindmaps = asyncHandler(async (req, res) => {
-    const mindmaps = await Mindmap.find({})
+    const userId = req.body.userId
+    const mindmaps = await Mindmap.find({
+        owner: userId
+    })
+    
 
     if (!mindmaps) {
         throw new ApiError(404, "No mindmaps found")
