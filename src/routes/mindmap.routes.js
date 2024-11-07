@@ -9,7 +9,7 @@ import { Router } from "express";
 const router = Router()
 
 router.route("/create-mindmap").post(createMindmap)
-router.route("/get-all-mindmaps").get(getAllMindmaps)
+router.route("/get-all-mindmaps/:id").get(getAllMindmaps)
 router.route("/delete-mindmap/:id").delete(deleteMindmap)
 router.route("/update-mindmap/:id").put(updateMindmap)
 

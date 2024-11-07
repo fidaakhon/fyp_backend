@@ -11,7 +11,6 @@ const createMindmap = asyncHandler(async (req, res) => {
 
     const { id, title, nodes, userId } = req.body
 
-
     if (
         !id ||
         !title ||
@@ -27,7 +26,9 @@ const createMindmap = asyncHandler(async (req, res) => {
     })
 
     if (existedMindmap) {
-        throw new ApiError(409, "Mindmap with title already exists")
+        if (existedMindmap.owner === userId) {
+            throw new ApiError(409, "Mindmap with title already exists")
+        }
     }
 
     // const user = await User.findOne({
@@ -55,11 +56,12 @@ const createMindmap = asyncHandler(async (req, res) => {
 })
 
 const getAllMindmaps = asyncHandler(async (req, res) => {
-    const userId = req.body.userId
-    const mindmaps = await Mindmap.find({
-        owner: userId
-    })
-    
+    const mindmaps = await Mindmap.find(
+        {
+            owner: req.params.id
+        }
+    )
+
 
     if (!mindmaps) {
         throw new ApiError(404, "No mindmaps found")
