@@ -31,13 +31,6 @@ const createMindmap = asyncHandler(async (req, res) => {
         }
     }
 
-    // const user = await User.findOne({
-    //     email
-    // })
-
-    // if (!user) {
-    //     throw new ApiError(404, "User not found")
-    // }
 
     const mindmap = await Mindmap.create({
         id,
